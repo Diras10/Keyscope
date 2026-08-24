@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Keyscope — Keyword Research</title>
+<link rel="icon" type="image/png" href="Keyscope logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM`g+Plex+Sans:wght@400;500;600&family=Zilla+Slab:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #F3F0E6;
+    --cream-2: #EAE5D6;
+    --ink: #1B2B22;
+    --forest: #2F4A3B;
+    --forest-deep: #1C2E24;
+    --forest-soft: #3F6350;
+    --gold: #B9922E;
+    --clay: #A8452F;
+    --sage: #6E8F72;
+    --line: rgba(27,43,34,0.14);
+    --radius: 10px;
+    --shadow: 0 10px 30px rgba(20,30,24,0.10);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; width:100%; overflow-x:hidden; }
+  body{
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height:100vh;
+    min-height:100dvh;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  h1,h2,h3{ font-family:'Zilla Slab', serif; font-weight:600; margin:0; color: var(--forest-deep); letter-spacing:-0.01em; }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--forest-soft);
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color: inherit; }
+  button{ font-family:'IBM Plex Sans', sans-serif; cursor:pointer; }
+  input, textarea{ font-family:'IBM Plex Sans', sans-serif; }
+
+  button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible{
+    outline: 2px solid var(--forest);
+    outline-offset: 2px;
+  }
+
+  .view{ min-height:100vh; min-height:100dvh; }
+  [hidden]{ display:none !important; }
+
+  /* ---------- AUTH VIEW ---------- */
+  .auth-shell{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns: 1.05fr 1fr;
+  }
+  @media (max-width: 860px){
+    .auth-shell{ grid-template-columns: 1fr; }
+    .auth-brand{ min-height: 260px; }
+  }
+  .auth-brand{
+    background: radial-gradient(120% 120% at 15% 10%, var(--forest-soft) 0%, var(--forest) 45%, var(--forest-deep) 100%);
+    color: var(--cream);
+    padding: 56px 48px;
+    display:flex;
+    flex-direction:column;
+    justify-content: space-between;
+    position:relative;
+    overflow:hidden;
+  }
+  .auth-brand .brand-mark{
+    font-family:'Zilla Slab', serif;
+    font-size: 26px;
+    font-weight:600;
+    letter-spacing: 0.02em;
+  }
+  .auth-brand .brand-mark span{ color: var(--gold); }
+  .auth-brand .brand-copy{ max-width: 420px; }
+  .auth-brand .brand-copy h1{
+    color: var(--cream);
+    font-size: clamp(32px, 4vw, 46px);
+    line-height: 1.08;
+    margin-bottom: 14px;
+  }
+  .auth-brand .brand-copy p{
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(243,240,230,0.78);
+    margin: 0;
+  }
+  .brand-visual{ margin-top: 32px; }
+  .brand-stats{
+    display:flex;
+    gap: 28px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+  .brand-stats div{ min-width: 90px; }
+  .brand-stats .num{ font-family:'IBM Plex Mono', monospace; font-size: 20px; color: var(--cream); }
+  .brand-stats .lbl{ font-family:'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform:uppercase; color: rgba(243,240,230,0.55); margin-top:2px; }
+
+  .auth-form-panel{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 40px 32px;
+  }
+  .auth-card{
+    width:100%;
+    max-width: 380px;
+  }
+  .auth-card .eyebrow{ margin-bottom: 10px; }
+  .auth-card h2{ font-size: 28px; margin-bottom: 6px; }
+  .auth-card .sub{ font-size: 14px; color: var(--forest-soft); margin-bottom: 28px; }
+
+  .field{ margin-bottom: 16px; }
+  .field label{
+    display:block;
+    font-family:'sans serif', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--forest-deep);
+    margin-bottom: 6px;
+  }
+  .field input{
+    width:100%;
+    padding: 11px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .field input::placeholder{ color: #9aa39c; }
+  .field-error{
+    font-size: 12px;
+    color: var(--clay);
+    margin-top: 5px;
+    font-family:'sans serif', monospace;
+    min-height: 14px;
+  }
+
+  .btn-primary{
+    width:100%;
+    background: var(--forest);
+    color: var(--cream);
+    border:none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight:600;
+    letter-spacing: 0.01em;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn-primary:hover{ background: var(--forest-deep); }
+  .btn-primary:active{ transform: translateY(1px); }
+
+  .auth-switch{
+    text-align:center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--forest-soft);
+  }
+  .auth-switch button{
+    background:none; border:none; color: var(--forest); text-decoration: underline;
+    font-size: 13px; padding: 0;
+  }
+
+  .auth-note{
+    margin-top: 20px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: rgba(27,43,34,0.55);
+    font-family: 'Arial', monospace;
+  }
+
+  /* ---------- APP VIEW ---------- */
+  .app-shell{
+    display:grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .sidebar{
+    background: var(--forest-deep);
+    color: var(--cream);
+    padding: 28px 22px;
+    display:flex;
+    flex-direction:column;
+    position: sticky;
+    top:0;
+    height: 100vh;
+    height: 100dvh;
+  }
+  @media (max-width: 780px){
+    .app-shell{ grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .sidebar{
+      position: static;
+      height: auto;
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      padding: 10px 14px;
+    }
+    .sidebar-brand{ flex: 1 1 100%; margin-bottom: 0; font-size: 16px; text-align: center; }
+    .sidebar-spacer{ display: none; }
+    .sidebar-user{ display: none; }
+
+    /* Nav tabs + logout share one row, right in the (now short) header */
+    .sidebar nav{
+      flex: 1;
+      display: flex;
+      gap: 6px;
+      background: transparent;
+      border-top: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .logout-btn{
+      flex: 0 0 auto;
+      position: static;
+      margin-top: 0;
+      padding: 8px 12px;
+      font-size: 11.5px;
+      border-radius: 8px;
+    }
+    .nav-btn{
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 8px 4px;
+      margin-bottom: 0;
+      border-radius: 8px;
+      font-size: 11.5px;
+      color: rgba(243,240,230,0.6);
+    }
+    .nav-btn .nav-ico{ display: inline; font-size: 13px; line-height: 1; }
+    .nav-btn .nav-label{ display: inline; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-btn.active{ color: var(--gold); background: rgba(185,146,46,0.14); font-weight: 600; }
+  }
+  @media (max-width: 360px){
+    .nav-btn .nav-label{ display: none; }
+    .nav-btn .nav-ico{ font-size: 16px; }
+  }
+  .sidebar-brand{
+    font-family:'Zilla Slab', serif;
+    font-size: 21px;
+    font-weight:600;
+    margin-bottom: 34px;
+  }
+  .sidebar-brand span{ color: var(--gold); }
+  .nav-btn{
+    display:block;
+    width:100%;
+    text-align:left;
+    background: none;
+    border: none;
+    color: rgba(243,240,230,0.7);
+    padding: 11px 12px;
+    border-radius: 7px;
+    font-size: 14px;
+    margin-bottom: 4px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .nav-btn:hover{ background: rgba(243,240,230,0.06); color: var(--cream); }
+  .nav-btn.active{ background: rgba(243,240,230,0.1); color: var(--cream); font-weight:600; }
+  .nav-ico{ display:none; }
+  .sidebar-spacer{ flex:1; }
+  .sidebar-user{
+    font-family:'Arial', monospace;
+    font-size: 12px;
+    color: rgba(243,240,230,0.55);
+    padding: 10px 12px;
+    border-top: 1px solid rgba(243,240,230,0.12);
+    margin-top: 12px;
+  }
+  .sidebar-user b{ color: var(--cream); font-weight:500; }
+  .logout-btn{
+    background:none;
+    border: 1px solid rgba(243,240,230,0.25);
+    color: rgba(243,240,230,0.8);
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  .logout-btn:hover{ border-color: var(--gold); color: var(--gold); }
+
+  .main{
+    padding: 40px 44px 0 44px;
+    display:flex;
+    flex-direction:column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    min-width: 0;
+  }
+  @media (max-width: 780px){ .main{ padding-top: 22px; padding-left: 20px; padding-right: 20px; } }
+  @media (max-width: 560px){ .main{ padding-top: 20px; padding-left: 16px; padding-right: 16px; } }
+
+  .main-inner{ flex:1; }
+
+  .tab-head{ margin-bottom: 28px; }
+  .tab-head h2{ font-size: 30px; margin-top: 4px; }
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card{
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 18px;
+  }
+  .stat-card .stat-num{ font-family:'Playfair Display', serif; font-size: 26px; color: var(--forest-deep); }
+  .stat-card .stat-lbl{ font-size: 12px; color: var(--forest-soft); margin-top: 4px; }
+
+  .panel{
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 28px;
+  }
+  .panel-title{
+    font-family:'Arial', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--forest-soft);
+    margin-bottom: 14px;
+  }
+
+  .log-row{
+    display:grid;
+    grid-template-columns: 1fr 110px 100px 90px;
+    gap: 10px;
+    align-items:center;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+  .log-row:last-child{ border-bottom: none; }
+  .log-row.head{
+    font-family:'sans serif', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--forest-soft);
+  }
+  @media (max-width: 620px){
+    .log-row{ grid-template-columns: 1fr 90px 76px; }
+    .log-row span.col-date{ display:none; }
+  }
+  .kw-name{ font-weight:600; color: var(--ink); }
+  .vol-cell{ font-family:'sans serif', monospace; color: var(--forest-deep); }
+  .badge{
+    display:inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-family:'Playfair Display', serif;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+  .badge.low{ background: rgba(110,143,114,0.16); color: #4C6B50; }
+  .badge.medium{ background: rgba(185,146,46,0.18); color: #8C6B1E; }
+  .badge.high{ background: rgba(168,69,47,0.15); color: var(--clay); }
+
+  .empty-state{
+    text-align:center;
+    padding: 34px 10px;
+    color: var(--forest-soft);
+    font-size: 13.5px;
+  }
+
+  /* Keyword tool */
+  .kw-search{
+    display:flex;
+    gap: 10px;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+  }
+  .kw-search input{
+    flex:1;
+    min-width: 220px;
+    padding: 13px 16px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 15px;
+    background:#fff;
+  }
+  .kw-search-context{
+    font-size: 12px;
+    color: var(--forest-soft);
+    margin-bottom: 14px;
+  }
+  .kw-btn{
+    background: var(--forest);
+    color: var(--cream);
+    border:none;
+    border-radius: 8px;
+    padding: 0 22px;
+    font-size: 14px;
+    font-weight:600;
+  }
+  .kw-btn:hover{ background: var(--forest-deep); }
+
+  .result-grid{
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    gap: 22px;
+  }
+  @media (max-width: 780px){ .result-grid{ grid-template-columns: 1fr; } }
+
+  .gauge-card{
+    background:#fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px;
+    text-align:center;
+  }
+  .gauge-kw{
+    font-family:'Playfair Display', serif;
+    font-size: 20px;
+    font-weight:600;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+  .gauge-comp-label{ font-family:'Playfair Display', serif; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color: var(--forest-soft); margin-bottom: 10px;}
+  .gauge-vol{
+    margin-top: 14px;
+    font-family:'Playfair Display', serif;
+    font-size: 30px;
+    color: var(--forest-deep);
+  }
+  .gauge-vol-lbl{ font-size: 11px; color: var(--forest-soft); font-family:'Playfair Display', serif; text-transform:uppercase; letter-spacing:0.06em; }
+
+  .suggest-list{ display:flex; flex-direction:column; gap:0; }
+  .suggest-row{
+    display:grid;
+    grid-template-columns: 1fr 110px 100px;
+    gap: 10px;
+    align-items:center;
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13.5px;
+  }
+  .suggest-row:last-child{ border-bottom:none; }
+  @media (max-width: 480px){ .suggest-row{ grid-template-columns: 1fr 80px 70px; } }
+
+  /* Contact */
+  .contact-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  @media (max-width: 760px){ .contact-grid{ grid-template-columns: 1fr; } }
+  .contact-info h3{ font-size: 22px; margin-bottom: 10px; }
+  .contact-info p{ font-size: 14px; line-height:1.7; color: var(--forest-soft); margin: 0 0 14px 0;}
+  .contact-info .info-line{ font-family:'sans serif', monospace; font-size: 13px; color: var(--ink); margin-bottom: 6px;}
+  .field textarea{
+    width:100%;
+    padding: 11px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 110px;
+    color: var(--ink);
+  }
+  .contact-success{
+    background: rgba(110,143,114,0.14);
+    border: 1px solid rgba(110,143,114,0.4);
+    color: #4C6B50;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    margin-bottom: 16px;
+  }
+
+  .app-footer{
+    margin-top: 40px;
+    padding: 18px 0 26px 0;
+    border-top: 1px solid var(--line);
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-family:'Playfair Display', serif;
+    font-size: 12px;
+    color: var(--forest-soft);
+  }
+
+  .toast{
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    background: var(--forest-deep);
+    color: var(--cream);
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    box-shadow: var(--shadow);
+    z-index: 50;
+    max-width: 280px;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===================== AUTH VIEW ===================== -->
+  <div class="view" id="view-auth">
+    <div class="auth-shell">
+      <div class="auth-brand">
+        <div class="brand-mark">Key<span>scope</span></div>
+        <div class="brand-copy">
+          <h1>Know what people search before you write a word.</h1>
+          <p>Search volume, competition level, and the related terms worth targeting for any keyword, in seconds.</p>
+          <div class="brand-visual">
+            <svg width="220" height="120" viewBox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <polyline points="0,95 30,80 55,88 80,55 105,62 130,30 155,40 180,15 220,22" stroke="#B9922E" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="180" cy="15" r="4" fill="#F3F0E6"/>
+              <line x1="0" y1="110" x2="220" y2="110" stroke="rgba(243,240,230,0.25)" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+        <div class="brand-stats">
+          <div><div class="num">50K+</div><div class="lbl">Terms Indexed</div></div>
+          <div><div class="num">3</div><div class="lbl">Competition Tiers</div></div>
+          <div><div class="num">&lt;1s</div><div class="lbl">Lookup Time</div></div>
+        </div>
+      </div>
+
+      <div class="auth-form-panel">
+        <div class="auth-card">
+
+          <form id="login-form">
+            <div class="eyebrow">Welcome back</div>
+            <h2>Log in</h2>
+            <div class="sub">Pick up your keyword research where you left off.</div>
+
+            <div class="field">
+              <label for="login-email">Email</label>
+              <input id="login-email" type="email" autocomplete="email" placeholder="you@example.com" />
+            </div>
+            <div class="field">
+              <label for="login-password">Password</label>
+              <input id="login-password" type="password" autocomplete="current-password" placeholder="Enter Password" />
+              <div class="field-error" id="login-error"></div>
+            </div>
+            <button type="submit" class="btn-primary">Log in</button>
+
+            <div class="auth-switch">
+              New here? <button type="button" id="go-signup">Create an account</button>
+            </div>
+            <div class="auth-note">we use this information to provide, personalise and improve our products, including ads. Your information will be kept confidential and used in accordance with our Privacy Policy.</div>
+          </form>
+
+          <form id="signup-form" hidden>
+            <div class="eyebrow">Get started</div>
+            <h2>Create your account</h2>
+            <div class="sub">Track your keyword research in one dashboard.</div>
+
+            <div class="field">
+              <label for="signup-name">Full name</label>
+              <input id="signup-name" type="text" autocomplete="name" placeholder="Your Name" />
+            </div>
+            <div class="field">
+              <label for="signup-username">Username</label>
+              <input id="signup-username" type="text" autocomplete="username" placeholder="Choose a username" />
+            </div>
+            <div class="field">
+              <label for="signup-email">Email</label>
+              <input id="signup-email" type="email" autocomplete="email" placeholder="you@example.com" />
+            </div>
+            <div class="field">
+              <label for="signup-password">Password</label>
+              <input id="signup-password" type="password" autocomplete="new-password" placeholder="At least 6 characters" />
+              <div class="field-error" id="signup-error"></div>
+            </div>
+            <button type="submit" class="btn-primary">Create account</button>
+
+            <div class="auth-switch">
+              Already have an account? <button type="button" id="go-login">Log in</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== APP VIEW ===================== -->
+  <div class="view" id="view-app" hidden>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-brand">Key<span>scope</span></div>
+        <nav>
+          <button class="nav-btn active" data-tab="dashboard"><span class="nav-ico">◆</span><span class="nav-label">Dashboard</span></button>
+          <button class="nav-btn" data-tab="tool"><span class="nav-ico">◎</span><span class="nav-label">Keyword Tool</span></button>
+          <button class="nav-btn" data-tab="contact"><span class="nav-ico">✉</span><span class="nav-label">Contact</span></button>
+        </nav>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-user">Signed in as<br/><b id="sidebar-username">—</b></div>
+        <button class="logout-btn" id="logout-btn">Log out</button>
+      </aside>
+
+      <main class="main">
+        <div class="main-inner">
+
+          <!-- DASHBOARD -->
+          <section class="tab-panel" id="tab-dashboard">
+            <div class="tab-head">
+              <h2>Your dashboard</h2>
+            </div>
+
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-num mono" id="stat-total">0</div>
+                <div class="stat-lbl">Keywords researched</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num mono" id="stat-avgvol">0</div>
+                <div class="stat-lbl">Average monthly searches</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num mono" id="stat-low">0</div>
+                <div class="stat-lbl">Low-competition finds</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num mono" id="stat-last">—</div>
+                <div class="stat-lbl">Last search</div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-title">Recent work</div>
+              <div id="recent-work-list">
+                <!-- filled by JS -->
+              </div>
+            </div>
+          </section>
+
+          <!-- KEYWORD TOOL -->
+          <section class="tab-panel" id="tab-tool" hidden>
+            <div class="tab-head">
+              <h2>Keyword tool</h2>
+            </div>
+
+            <div class="kw-search-context">Research keyword using Keyscope</div>
+            <form class="kw-search" id="kw-form">
+              <input type="text" id="kw-input" placeholder="Enter a keyword or phrase" />
+              <button type="submit" class="kw-btn">Analyze</button>
+            </form>
+
+            <div id="kw-results" hidden>
+              <div class="result-grid">
+                <div class="gauge-card">
+                  <div class="gauge-kw" id="gauge-kw">—</div>
+                  <div class="gauge-comp-label" id="gauge-comp-label">competition</div>
+                  <svg width="200" height="120" viewBox="0 0 200 120" id="gauge-svg">
+                    <path d="M 20 100 A 80 80 0 0 1 73 26" stroke="#6E8F72" stroke-width="14" fill="none" stroke-linecap="round"/>
+                    <path d="M 73 26 A 80 80 0 0 1 127 26" stroke="#B9922E" stroke-width="14" fill="none" stroke-linecap="round"/>
+                    <path d="M 127 26 A 80 80 0 0 1 180 100" stroke="#A8452F" stroke-width="14" fill="none" stroke-linecap="round"/>
+                    <g id="gauge-needle" transform="rotate(0 100 100)">
+                      <line x1="100" y1="100" x2="100" y2="34" stroke="#1B2B22" stroke-width="3" stroke-linecap="round"/>
+                    </g>
+                    <circle cx="100" cy="100" r="6" fill="#1B2B22"/>
+                  </svg>
+                  <div class="gauge-vol" id="gauge-vol">0</div>
+                  <div class="gauge-vol-lbl">avg. monthly searches</div>
+                </div>
+
+                <div class="panel" style="margin-bottom:0;">
+                  <div class="panel-title">Related keywords worth targeting</div>
+                  <div class="log-row head">
+                    <span>Keyword</span><span>Volume</span><span>Competition</span>
+                  </div>
+                  <div class="suggest-list" id="suggest-list"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" id="kw-empty">
+              <div class="empty-state">Analyze a keyword above to see its search volume, competition level, and related terms.</div>
+            </div>
+          </section>
+
+          <!-- CONTACT -->
+          <section class="tab-panel" id="tab-contact" hidden>
+            <div class="tab-head">
+              <h2>Contact</h2>
+            </div>
+
+            <div class="contact-grid">
+              <div class="contact-info">
+                <h3>Questions, feedback, or a project in mind?</h3>
+                <p>Send a message and it'll come straight through whether it's about this tool, a bug you've spotted, or something you'd like built.</p>
+                <div class="info-line">Diras Guragain</div>
+                <div class="info-line">Kathmandu, Nepal</div>
+              </div>
+
+              <div>
+                <div id="contact-success" class="contact-success" hidden>Message received — thanks for reaching out.</div>
+                <form id="contact-form">
+                  <div class="field">
+                    <label for="contact-name">Name</label>
+                    <input id="contact-name" type="text" placeholder="Your name" />
+                  </div>
+                  <div class="field">
+                    <label for="contact-email">Email</label>
+                    <input id="contact-email" type="email" placeholder="you@example.com" />
+                    <div class="field-error" id="contact-error"></div>
+                  </div>
+                  <div class="field">
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" placeholder="What's on your mind?"></textarea>
+                  </div>
+                  <button type="submit" class="btn-primary">Send message</button>
+                </form>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <footer class="app-footer">
+          <span>© 2026 Diras Guragain. All rights reserved.</span>
+          <span>Keyscope — keyword research tool</span>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var state = { email: null, username: null, name: null };
+
+  // ---------- storage helpers ----------
+  async function storeGet(key){
+    try{
+      var r = await window.storage.get(key, false);
+      return r ? JSON.parse(r.value) : null;
+    }catch(e){ return null; }
+  }
+  async function storeSet(key, value){
+    try{ await window.storage.set(key, JSON.stringify(value), false); }
+    catch(e){ console.error("storage set failed", e); }
+  }
+
+  function showToast(msg){
+    var t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 3200);
+  }
+
+  // ---------- deterministic pseudo-random from string ----------
+  function hashStr(str){
+    var h = 2166136261;
+    for(var i=0;i<str.length;i++){
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return Math.abs(h);
+  }
+
+  function analyzeKeyword(raw){
+    var kw = raw.trim().toLowerCase();
+    var h1 = hashStr(kw + "|vol");
+    var h2 = hashStr(kw + "|comp");
+    var volume = 90 + (h1 % 48000); // 90 - 48090
+    var score = h2 % 100; // 0-99
+    var competition = score < 34 ? "low" : (score < 67 ? "medium" : "high");
+    return { keyword: kw, volume: volume, score: score, competition: competition };
+  }
+
+  var MODIFIERS = ["best", "how to", "vs alternatives", "near me", "for beginners", "price of", "guide to", "top rated", "reviews"];
+
+  function relatedKeywords(baseKw){
+    var picks = [];
+    var seed = hashStr(baseKw);
+    for(var i=0;i<6;i++){
+      var mod = MODIFIERS[(seed + i * 7) % MODIFIERS.length];
+      var phrase = (i % 2 === 0) ? (mod + " " + baseKw) : (baseKw + " " + mod);
+      picks.push(analyzeKeyword(phrase));
+    }
+    return picks;
+  }
+
+  function fmtVolume(n){
+    if(n >= 1000) return (n/1000).toFixed(n >= 10000 ? 0 : 1) + "K";
+    return String(n);
+  }
+
+  function badgeHtml(competition){
+    return '<span class="badge ' + competition + '">' + competition + '</span>';
+  }
+
+  // ---------- view switching ----------
+  function showAuth(){
+    document.getElementById("view-auth").hidden = false;
+    document.getElementById("view-app").hidden = true;
+  }
+  function showApp(){
+    document.getElementById("view-auth").hidden = true;
+    document.getElementById("view-app").hidden = false;
+  }
+
+  var tabButtons = document.querySelectorAll(".nav-btn");
+  tabButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      tabButtons.forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      document.querySelectorAll(".tab-panel").forEach(function(p){ p.hidden = true; });
+      document.getElementById("tab-" + btn.dataset.tab).hidden = false;
+    });
+  });
+
+  // ---------- auth form toggling ----------
+  document.getElementById("go-signup").addEventListener("click", function(){
+    document.getElementById("login-form").hidden = true;
+    document.getElementById("signup-form").hidden = false;
+  });
+  document.getElementById("go-login").addEventListener("click", function(){
+    document.getElementById("signup-form").hidden = true;
+    document.getElementById("login-form").hidden = false;
+  });
+
+  // ---------- signup ----------
+  document.getElementById("signup-form").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var errEl = document.getElementById("signup-error");
+    errEl.textContent = "";
+    var name = document.getElementById("signup-name").value.trim();
+    var username = document.getElementById("signup-username").value.trim();
+    var email = document.getElementById("signup-email").value.trim().toLowerCase();
+    var password = document.getElementById("signup-password").value;
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if(!name || !username || !email || !password){
+      errEl.textContent = "Please fill in every field.";
+      return;
+    }
+    if(!emailOk){
+      errEl.textContent = "Enter a valid email address.";
+      return;
+    }
+    if(password.length < 6){
+      errEl.textContent = "Password should be at least 6 characters.";
+      return;
+    }
+
+    var existing = await storeGet("user:" + email);
+    if(existing){
+      errEl.textContent = "An account with that email already exists.";
+      return;
+    }
+
+    await storeSet("user:" + email, { name: name, username: username, email: email, password: password });
+    await storeSet("history:" + email, []);
+
+    state.email = email;
+    state.username = username;
+    state.name = name;
+    enterApp();
+  });
+
+  // ---------- login ----------
+  document.getElementById("login-form").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var errEl = document.getElementById("login-error");
+    errEl.textContent = "";
+    var email = document.getElementById("login-email").value.trim().toLowerCase();
+    var password = document.getElementById("login-password").value;
+
+    if(!email || !password){
+      errEl.textContent = "Enter your email and password.";
+      return;
+    }
+
+    var user = await storeGet("user:" + email);
+    if(!user || user.password !== password){
+      errEl.textContent = "Incorrect email or password.";
+      return;
+    }
+
+    state.email = email;
+    state.username = user.username;
+    state.name = user.name;
+    enterApp();
+  });
+
+  document.getElementById("logout-btn").addEventListener("click", function(){
+    state.email = null;
+    state.username = null;
+    state.name = null;
+    document.getElementById("login-form").reset();
+    document.getElementById("login-error").textContent = "";
+    showAuth();
+  });
+
+  async function enterApp(){
+    document.getElementById("sidebar-username").textContent = state.name || state.username;
+    showApp();
+    await renderDashboard();
+  }
+
+  // ---------- dashboard ----------
+  async function getHistory(){
+    var h = await storeGet("history:" + state.email);
+    return h || [];
+  }
+  async function saveHistory(list){
+    await storeSet("history:" + state.email, list.slice(0, 20));
+  }
+
+  async function renderDashboard(){
+    var history = await getHistory();
+    document.getElementById("stat-total").textContent = history.length;
+
+    if(history.length === 0){
+      document.getElementById("stat-avgvol").textContent = "—";
+      document.getElementById("stat-low").textContent = "0";
+      document.getElementById("stat-last").textContent = "—";
+      document.getElementById("recent-work-list").innerHTML =
+        '<div class="empty-state">No searches yet. Head to the Keyword Tool to analyze your first term.</div>';
+      return;
+    }
+
+    var avgVol = Math.round(history.reduce(function(s,i){ return s + i.volume; }, 0) / history.length);
+    var lowCount = history.filter(function(i){ return i.competition === "low"; }).length;
+
+    document.getElementById("stat-avgvol").textContent = fmtVolume(avgVol);
+    document.getElementById("stat-low").textContent = lowCount;
+    document.getElementById("stat-last").textContent = history[0].keyword;
+
+    var rows = '<div class="log-row head"><span>Keyword</span><span>Volume</span><span>Competition</span><span class="col-date">Date</span></div>';
+    history.slice(0, 8).forEach(function(item){
+      rows += '<div class="log-row">' +
+        '<span class="kw-name">' + escapeHtml(item.keyword) + '</span>' +
+        '<span class="vol-cell">' + fmtVolume(item.volume) + '/mo</span>' +
+        badgeHtml(item.competition) +
+        '<span class="col-date mono">' + item.date + '</span>' +
+        '</div>';
+    });
+    document.getElementById("recent-work-list").innerHTML = rows;
+  }
+
+  function escapeHtml(s){
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // ---------- keyword tool ----------
+  document.getElementById("kw-form").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var input = document.getElementById("kw-input");
+    var raw = input.value.trim();
+    if(!raw) return;
+
+    var result = analyzeKeyword(raw);
+    var related = relatedKeywords(result.keyword);
+    
+
+    // render gauge
+    document.getElementById("gauge-kw").textContent = result.keyword;
+    document.getElementById("gauge-comp-label").textContent = result.competition + " competition";
+    document.getElementById("gauge-vol").textContent = result.volume.toLocaleString();
+    var angle = -90 + (result.score / 100) * 180;
+    document.getElementById("gauge-needle").setAttribute("transform", "rotate(" + angle + " 100 100)");
+
+    // render related
+    var listHtml = "";
+    related.forEach(function(r){
+      listHtml += '<div class="suggest-row">' +
+        '<span class="kw-name">' + escapeHtml(r.keyword) + '</span>' +
+        '<span class="vol-cell">' + fmtVolume(r.volume) + '/mo</span>' +
+        badgeHtml(r.competition) +
+        '</div>';
+    });
+    document.getElementById("suggest-list").innerHTML = listHtml;
+
+    document.getElementById("kw-results").hidden = false;
+    document.getElementById("kw-empty").hidden = true;
+
+    // save to history
+    var history = await getHistory();
+    var today = new Date();
+    var dateStr = (today.getMonth()+1) + "/" + today.getDate() + "/" + today.getFullYear().toString().slice(2);
+    history.unshift({ keyword: result.keyword, volume: result.volume, competition: result.competition, date: dateStr });
+    await saveHistory(history);
+    await renderDashboard();
+  });
+
+  // ---------- contact ----------
+  document.getElementById("contact-form").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var errEl = document.getElementById("contact-error");
+    errEl.textContent = "";
+    var name = document.getElementById("contact-name").value.trim();
+    var email = document.getElementById("contact-email").value.trim();
+    var message = document.getElementById("contact-message").value.trim();
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if(!name || !message){
+      errEl.textContent = "Please add your name and a message.";
+      return;
+    }
+    if(!emailOk){
+      errEl.textContent = "Enter a valid email address.";
+      return;
+    }
+
+    var key = "contact:" + Date.now() + ":" + Math.random().toString(36).slice(2,7);
+    await storeSet(key, { name: name, email: email, message: message, date: new Date().toISOString() });
+
+    document.getElementById("contact-success").hidden = false;
+    document.getElementById("contact-form").reset();
+    showToast("Message sent — thanks, " + name.split(" ")[0] + ".");
+  });
+
+  showAuth();
+})();
+</script>
+
+</body>
+</html>
